@@ -6,7 +6,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 RUN apk upgrade -U
 
 # Install necessary build dependencies (including JDK for Bazel)
-RUN apk add --update alpine-sdk git bash unzip curl openjdk11 bazel8 gcompat
+RUN apk add --update alpine-sdk git bash unzip curl openjdk21-jdk bazel8 gcompat llvm-next-libgcc libstdc++
 
 # Install Bazelisk (recommended way to use Bazel)
 RUN curl -Lo /usr/local/bin/bazelisk https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 && \
