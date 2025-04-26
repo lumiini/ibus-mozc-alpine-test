@@ -1,0 +1,47 @@
+name: Build Mozc IBus for Alpine
+
+on:
+  workflow_dispatch: # Allows manual triggering from the GitHub UI
+  push:
+    branches: [ main ] # Trigger on pushes to the main branch (you can adjust this)
+    paths:
+      - 'Dockerfile'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Podman
+      uses: imjuni/setup-podman@v2
+      with:
+        version: latest
+
+    - name: Build the Docker image
+      run: |
+        podman build -t mozc-builder -f Dockerfile .
+
+    - name: Create and run the container
+      run: |
+        container_id=$(podman create mozc-builder)
+        echo "Container ID: $container_id"
+        echo "CONTAINER_ID=$container_id" >> $GITHUB_ENV
+
+    - name: Copy out the Mozc IBus module and data
+      run: |
+        mkdir -p mozc-artifacts
+        podman cp "${{ env.CONTAINER_ID }}:/usr/local/lib/ibus-mozc" mozc-artifacts/ibus-mozc
+        podman cp -r "${{ env.CONTAINER_ID }}:/usr/local/share/mozc" mozc-artifacts/mozc-data
+
+    - name: Remove the container
+      if: always()
+      run: podman rm "${{ env.CONTAINER_ID }}"
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: mozc-ibus-alpine-artifacts
+        path: mozc-artifacts/
