@@ -9,7 +9,7 @@ RUN git clone https://github.com/google/mozc.git /mozc
 WORKDIR /mozc/build
 
 # Configure the build
-RUN cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DIM_MODULE=ibus ..
+RUN cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DIM_MODULE=ibus /mozc
 
 # Build Mozc
 RUN ninja
