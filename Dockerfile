@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Install necessary build dependencies (including JDK for Bazel)
-RUN apk add --update alpine-sdk git bash unzip curl openjdk11
+RUN apk add --update alpine-sdk git bash unzip curl openjdk11 bazel8
 
 # Install Bazelisk (recommended way to use Bazel)
 RUN curl -Lo /usr/local/bin/bazelisk https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 && \
@@ -12,9 +12,6 @@ RUN git clone https://github.com/google/mozc.git /mozc
 
 # Change to the Mozc source directory
 WORKDIR /mozc
-
-# Ensure Bazel executable has execute permissions 
-RUN chmod +x /root/.cache/bazelisk/downloads/sha256/*/bin/bazel
 
 # Attempt to build the IBus module using Bazelisk
 RUN bazelisk build -c opt //src/ibus:mozc
