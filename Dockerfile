@@ -1,28 +1,30 @@
 FROM alpine:latest
 
-# Install build dependencies
-RUN apk add --update alpine-sdk git cmake ninja protobuf-dev protobuf openssl-dev pkgconfig boost-dev abseil-cpp-dev libxml2-dev libxkbcommon-dev libxkbcommon-x11 glib-dev icu-dev gtk+3.0-dev
+# Install necessary build dependencies (including JDK for Bazel)
+RUN apk add --update alpine-sdk git bash unzip curl openjdk11
+
+# Install Bazelisk (recommended way to use Bazel)
+RUN curl -Lo /usr/local/bin/bazelisk https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 && \
+    chmod +x /usr/local/bin/bazelisk
+
 # Clone the Mozc repository
 RUN git clone https://github.com/google/mozc.git /mozc
 
-# List the contents of /mozc
-RUN ls -al /mozc
+# Change to the Mozc source directory
+WORKDIR /mozc
 
-# Create a build directory
-WORKDIR /mozc/build
+# Attempt to build the IBus module using Bazelisk
+RUN bazelisk build -c opt //src/ibus:mozc
 
-# Configure the build
-RUN cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DIM_MODULE=ibus /mozc
-
-# Build Mozc
-RUN ninja
-
-# Create a directory to store the output
+# Create an output directory
 RUN mkdir /output
 
-# Install Mozc into the output directory (using a custom prefix)
-RUN ninja install DESTDIR=/output
+# Copy the built IBus module (adjust path if necessary)
+RUN cp /mozc/bazel-bin/src/ibus/mozc.so /output/ibus-mozc
 
-# The final image will only contain the built artifacts
+# Copy necessary data files (adjust path if necessary)
+RUN cp -r /mozc/src/data /output/mozc-data
+
+# Minimal final image
 FROM scratch
 COPY --from=0 /output /usr/local
