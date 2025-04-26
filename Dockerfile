@@ -1,8 +1,7 @@
 FROM alpine:latest
 
 # Install build dependencies
-RUN apk add --update alpine-sdk git cmake ninja protobuf-dev protobuf openssl-dev pkgconfig boost-dev abseil-cpp-dev libxml2-dev xkbcommon-dev xkbcommon-x11-dev gtk+3-dev glib-dev icu-dev
-
+RUN apk add --update alpine-sdk git cmake ninja protobuf-dev protobuf openssl-dev pkgconfig boost-dev abseil-cpp-dev libxml2-dev libxkbcommon-dev libxkbcommon-x11 glib-dev icu-dev gtk+3.0-dev
 # Clone the Mozc repository
 RUN git clone https://github.com/google/mozc.git /mozc
 
