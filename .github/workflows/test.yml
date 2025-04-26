@@ -39,7 +39,7 @@ jobs:
         run: podman rm "${{ env.CONTAINER_ID }}"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.0.2
         with:
           name: mozc-ibus-alpine-artifacts
           path: mozc-artifacts/
