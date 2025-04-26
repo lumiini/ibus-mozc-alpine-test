@@ -5,6 +5,9 @@ RUN apk add --update alpine-sdk git cmake ninja protobuf-dev protobuf openssl-de
 # Clone the Mozc repository
 RUN git clone https://github.com/google/mozc.git /mozc
 
+# List the contents of /mozc
+RUN ls -al /mozc
+
 # Create a build directory
 WORKDIR /mozc/build
 
