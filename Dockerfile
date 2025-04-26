@@ -1,4 +1,4 @@
-FROM alpine/edge
+FROM alpine/edge:latest
 
 # Add the testing repository to the list of repositories
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
