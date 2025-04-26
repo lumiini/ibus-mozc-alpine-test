@@ -1,4 +1,9 @@
-FROM alpine:latest
+FROM alpine/edge
+
+# Add the testing repository to the list of repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+
+RUN apk update
 
 # Install necessary build dependencies (including JDK for Bazel)
 RUN apk add --update alpine-sdk git bash unzip curl openjdk11 bazel8
